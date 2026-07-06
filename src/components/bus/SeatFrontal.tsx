@@ -13,7 +13,8 @@ export default function SeatFrontal({ asientos, onSeatClick, clickable }: Props)
 
   return (
     <div className="bus-frontal">
-      {chofer && (
+      {/* Izquierda-Ventana: Chófer */}
+      {chofer ? (
         <button
           type="button"
           disabled={!clickable}
@@ -21,11 +22,24 @@ export default function SeatFrontal({ asientos, onSeatClick, clickable }: Props)
           className={`frontal-card seat-conductor ${clickable ? "frontal-card-clickable" : ""}`}
           title="Conductor"
         >
-          <SteeringIcon className="frontal-icon" size={20} />
+          <SteeringIcon size={16} />
           <span className="frontal-label">CHÓFER</span>
         </button>
+      ) : (
+        <div />
       )}
-      {guia && (
+
+      {/* Izquierda-Pasillo: libre */}
+      <div />
+
+      {/* Pasillo central */}
+      <div className="pasillo" />
+
+      {/* Derecha-Pasillo: libre */}
+      <div />
+
+      {/* Derecha-Ventana: Guía */}
+      {guia ? (
         <button
           type="button"
           disabled={!clickable}
@@ -33,9 +47,11 @@ export default function SeatFrontal({ asientos, onSeatClick, clickable }: Props)
           className={`frontal-card seat-guia ${clickable ? "frontal-card-clickable" : ""}`}
           title="Guía"
         >
-          <MicIcon className="frontal-icon" size={20} />
+          <MicIcon size={16} />
           <span className="frontal-label">GUÍA</span>
         </button>
+      ) : (
+        <div />
       )}
     </div>
   );

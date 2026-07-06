@@ -7,6 +7,7 @@ import type { Asiento, Partido } from "../../types";
 import BusMap from "./BusMap";
 import SeatEditModal from "./SeatEditModal";
 import Legend from "../ui/Legend";
+import { WhatsAppIcon, CopyIcon } from "../ui/Icons";
 
 export default function BusEditPage() {
   const { id } = useParams();
@@ -16,6 +17,7 @@ export default function BusEditPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [savedMsg, setSavedMsg] = useState("");
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     setBase(getConfigBase());
@@ -46,6 +48,24 @@ export default function BusEditPage() {
     guardarAsientos(asientos);
   };
 
+  function copiarLinkWhatsApp() {
+    if (!id) return;
+    const url = `${window.location.origin}/confirmar/${id}`;
+    const mensaje = `*Peña Bética El Arco* — Autobús 26/27
+
+Confirma tu plaza para *Betis vs ${partido?.rival}* (${format(parseISO(partido!.fecha), "d MMM yyyy", { locale: es })}).
+
+Busca tu asiento en el mapa y pulsa sobre él:
+${url}
+
+Gracias!`;
+
+    navigator.clipboard.writeText(mensaje).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 3000);
+    });
+  }
+
   if (loading) return <p className="text-center text-slate-400 py-10">Cargando…</p>;
   if (!partido)
     return (
@@ -58,6 +78,12 @@ export default function BusEditPage() {
   const fecha = format(parseISO(partido.fecha), "d MMM yyyy", { locale: es });
   const baseAsiento = (a: Asiento) => base.find((b) => b.id === a.id) || a;
 
+  // Resumen de confirmaciones
+  const ocupados = partido.asientos.filter((a) => a.estado === "Ocupado");
+  const confirmados = ocupados.filter((a) => a.confirmado === "confirmado").length;
+  const cancelados = ocupados.filter((a) => a.confirmado === "cancelado").length;
+  const pendientes = ocupados.length - confirmados - cancelados;
+
   return (
     <section>
       <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
@@ -69,6 +95,31 @@ export default function BusEditPage() {
           <p className="text-sm text-slate-500">Clic en un asiento para editarlo. Los cambios se guardan automáticamente.</p>
         </div>
         <Legend />
+      </div>
+
+      {/* Barra de confirmaciones por WhatsApp */}
+      <div className="card mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex gap-4 text-sm">
+          <span className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded bg-emerald-500"></span>
+            {confirmados} confirmados
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded bg-slate-300"></span>
+            {pendientes} pendientes
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded bg-red-500"></span>
+            {cancelados} cancelados
+          </span>
+        </div>
+        <button
+          onClick={copiarLinkWhatsApp}
+          className="bg-[#25D366] text-white rounded-xl px-4 py-2 text-sm font-medium flex items-center gap-2 hover:bg-[#1eb555] transition-all"
+        >
+          <WhatsAppIcon size={18} />
+          {copied ? "Copiado! Pégalo en el grupo" : "Copiar mensaje para el grupo"}
+        </button>
       </div>
 
       <div className="flex items-center gap-3 mb-4 h-6">

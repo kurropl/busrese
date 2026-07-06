@@ -1,7 +1,7 @@
 import { supabase, supabaseEnabled } from "./supabase";
 import { clonarMatrizB } from "../data/matrizB";
 import calendario from "../data/calendario.json";
-import type { Asiento, Partido, PartidoInput } from "../types";
+import type { Asiento, Confirmacion, Partido, PartidoInput } from "../types";
 
 const LS_KEY = "pena-betica-partidos";
 const LS_SEEDED = "pena-betica-seeded";
@@ -133,4 +133,35 @@ export async function deletePartido(id: string): Promise<void> {
 /** Devuelve la configuración base (Matriz B) para la acción "Restaurar". */
 export function getConfigBase(): Asiento[] {
   return clonarMatrizB();
+}
+
+/** Actualiza el estado de confirmación de un asiento concreto (uso público, sin auth). */
+export async function confirmarAsiento(partidoId: string, asientoId: string, confirmacion: Confirmacion): Promise<void> {
+  if (supabaseEnabled && supabase) {
+    // Supabase: leer partido, modificar asiento, guardar
+    const { data, error: errFetch } = await supabase
+      .from("partidos")
+      .select("asientos")
+      .eq("id", partidoId)
+      .single();
+    if (errFetch) throw errFetch;
+    const asientos = (data?.asientos as Asiento[]).map((a) =>
+      a.id === asientoId ? { ...a, confirmado: confirmacion } : a
+    );
+    const { error } = await supabase
+      .from("partidos")
+      .update({ asientos, updated_at: new Date().toISOString() })
+      .eq("id", partidoId);
+    if (error) throw error;
+    return;
+  }
+  const list = lsRead();
+  const idx = list.findIndex((p) => p.id === partidoId);
+  if (idx >= 0) {
+    list[idx].asientos = list[idx].asientos.map((a) =>
+      a.id === asientoId ? { ...a, confirmado: confirmacion } : a
+    );
+    list[idx].updated_at = new Date().toISOString();
+    lsWrite(list);
+  }
 }

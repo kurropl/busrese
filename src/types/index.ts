@@ -1,4 +1,5 @@
 export type EstadoAsiento = "Libre" | "Ocupado" | "Conductor" | "Guia";
+export type Confirmacion = "pendiente" | "confirmado" | "cancelado";
 
 export interface Asiento {
   id: string; // "F-I1" (frontal) | "1".."72" (cuerpo)
@@ -9,6 +10,7 @@ export interface Asiento {
   posicion: "Ventana" | "Pasillo" | "Centro";
   estado: EstadoAsiento;
   ocupante: string | null;
+  confirmado?: Confirmacion; // pendiente | confirmado | cancelado
 }
 
 export interface Partido {

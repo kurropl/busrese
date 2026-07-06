@@ -1,5 +1,5 @@
 import type { Asiento } from "../../types";
-import { TicketIcon, UserIcon } from "../ui/Icons";
+import { TicketIcon, UserIcon, CheckIcon, XIcon } from "../ui/Icons";
 
 interface Props {
   asiento: Asiento;
@@ -25,18 +25,30 @@ export default function Seat({ asiento, onClick, clickable, selected }: Props) {
   const isFree = asiento.estado === "Libre";
   const name = isFree ? "Libre" : asiento.ocupante;
 
+  // Clase de confirmación (solo para asientos Ocupados)
+  const confirmacionCls =
+    asiento.estado === "Ocupado" && asiento.confirmado === "confirmado"
+      ? "seat-confirmado"
+      : asiento.estado === "Ocupado" && asiento.confirmado === "cancelado"
+        ? "seat-cancelado"
+        : "";
+
   return (
     <button
       type="button"
       disabled={!clickable}
       onClick={() => clickable && onClick?.(asiento)}
-      className={`seat ${estadoCls[asiento.estado]} ${clickable ? "seat-clickable" : ""} ${selected ? "seat-selected" : ""}`}
+      className={`seat ${estadoCls[asiento.estado]} ${confirmacionCls} ${clickable ? "seat-clickable" : ""} ${selected ? "seat-selected" : ""}`}
       title={asiento.ocupante ? `Asiento ${asiento.numero} · ${asiento.ocupante}` : `Asiento ${asiento.numero}`}
     >
       <span className="seat-num">{label}</span>
       {name && <span className="seat-name">{name}</span>}
-      {/* Icono de estado sutil */}
-      {isFree ? (
+      {/* Icono según estado de confirmación */}
+      {asiento.confirmado === "confirmado" ? (
+        <CheckIcon className="seat-icon" size={11} />
+      ) : asiento.confirmado === "cancelado" ? (
+        <XIcon className="seat-icon" size={11} />
+      ) : isFree ? (
         <UserIcon className="seat-icon" size={11} />
       ) : (
         <TicketIcon className="seat-icon" size={11} />

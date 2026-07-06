@@ -7,6 +7,7 @@ import BusViewPage from "./components/bus/BusViewPage";
 import LoginPage from "./components/admin/LoginPage";
 import DashboardPage from "./components/admin/DashboardPage";
 import BusEditPage from "./components/bus/BusEditPage";
+import ConfirmarPage from "./components/confirmar/ConfirmarPage";
 
 function Protected({ children }: { children: JSX.Element }) {
   const { session, loading } = useAuth();
@@ -22,6 +23,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<PartidosListPage />} />
           <Route path="/partido/:id" element={<BusViewPage />} />
+          <Route path="/confirmar/:partidoId" element={<ConfirmarPage />} />
           <Route path="/admin/login" element={<LoginPage />} />
           <Route
             path="/admin"
