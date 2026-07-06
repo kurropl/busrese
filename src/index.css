@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-gray-50 text-gray-900 antialiased;
+}
+
+/* ---------- Autobús: CSS Grid ---------- */
+.bus-grid {
+  display: grid;
+  grid-template-columns: 1fr 0.5fr 1fr; /* izq | pasillo | der */
+  gap: 0.4rem 0.5rem;
+}
+
+.seat {
+  @apply flex flex-col items-center justify-center rounded-md text-center text-[10px] sm:text-xs font-medium leading-tight transition-colors select-none;
+  aspect-ratio: 1 / 1;
+  min-height: 2.6rem;
+}
+
+.seat-libre      { @apply bg-seat-libre/90 text-white; }
+.seat-ocupado    { @apply bg-seat-ocupado/90 text-white; }
+.seat-conductor  { @apply bg-seat-conductor/90 text-white; }
+.seat-guia       { @apply bg-seat-guia/90 text-white; }
+
+.seat-clickable { @apply cursor-pointer hover:ring-2 hover:ring-betis-light hover:ring-offset-1; }
+
+.pasillo {
+  @apply flex items-center justify-center text-gray-300 text-[10px];
+}

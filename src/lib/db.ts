@@ -1,0 +1,100 @@
+import { supabase, supabaseEnabled } from "./supabase";
+import { clonarMatrizB } from "../data/matrizB";
+import type { Asiento, Partido, PartidoInput } from "../types";
+
+const LS_KEY = "pena-betica-partidos";
+
+/* ----------------------------- Local fallback ----------------------------- */
+
+function lsRead(): Partido[] {
+  try {
+    return JSON.parse(localStorage.getItem(LS_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+function lsWrite(list: Partido[]) {
+  localStorage.setItem(LS_KEY, JSON.stringify(list));
+}
+function uid() {
+  return crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
+}
+
+/* ------------------------------- Public API ------------------------------- */
+
+export async function getPartidos(): Promise<Partido[]> {
+  if (supabaseEnabled && supabase) {
+    const { data, error } = await supabase
+      .from("partidos")
+      .select("*")
+      .order("fecha", { ascending: true });
+    if (error) throw error;
+    return (data || []) as Partido[];
+  }
+  return lsRead().sort((a, b) => a.fecha.localeCompare(b.fecha));
+}
+
+export async function getPartido(id: string): Promise<Partido | null> {
+  if (supabaseEnabled && supabase) {
+    const { data, error } = await supabase.from("partidos").select("*").eq("id", id).single();
+    if (error) throw error;
+    return data as Partido;
+  }
+  return lsRead().find((p) => p.id === id) || null;
+}
+
+export async function createPartido(input: PartidoInput): Promise<Partido> {
+  const asientos = clonarMatrizB();
+  if (supabaseEnabled && supabase) {
+    const { data, error } = await supabase
+      .from("partidos")
+      .insert({ ...input, asientos, activo: true })
+      .select()
+      .single();
+    if (error) throw error;
+    return data as Partido;
+  }
+  const partido: Partido = {
+    id: uid(),
+    ...input,
+    asientos,
+    activo: true,
+    created_at: new Date().toISOString(),
+  };
+  const list = lsRead();
+  list.push(partido);
+  lsWrite(list);
+  return partido;
+}
+
+export async function updatePartidoAsientos(id: string, asientos: Asiento[]): Promise<void> {
+  if (supabaseEnabled && supabase) {
+    const { error } = await supabase
+      .from("partidos")
+      .update({ asientos, updated_at: new Date().toISOString() })
+      .eq("id", id);
+    if (error) throw error;
+    return;
+  }
+  const list = lsRead();
+  const idx = list.findIndex((p) => p.id === id);
+  if (idx >= 0) {
+    list[idx].asientos = asientos;
+    list[idx].updated_at = new Date().toISOString();
+    lsWrite(list);
+  }
+}
+
+export async function deletePartido(id: string): Promise<void> {
+  if (supabaseEnabled && supabase) {
+    const { error } = await supabase.from("partidos").delete().eq("id", id);
+    if (error) throw error;
+    return;
+  }
+  lsWrite(lsRead().filter((p) => p.id !== id));
+}
+
+/** Devuelve la configuración base (Matriz B) para la acción "Restaurar". */
+export function getConfigBase(): Asiento[] {
+  return clonarMatrizB();
+}
