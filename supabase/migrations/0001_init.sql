@@ -63,6 +63,13 @@ DROP POLICY IF EXISTS "admin_write_partidos" ON partidos;
 CREATE POLICY "admin_write_partidos" ON partidos
     FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
+-- Confirmación pública: cualquier usuario puede actualizar el campo
+-- 'confirmado' dentro del JSONB asientos (los socios confirman sin login).
+-- Solo se permite UPDATE, no INSERT/DELETE.
+DROP POLICY IF EXISTS "public_confirm_partidos" ON partidos;
+CREATE POLICY "public_confirm_partidos" ON partidos
+    FOR UPDATE TO anon, authenticated USING (true) WITH CHECK (true);
+
 -- ============================================================
 -- Seed: configuracion_base con la Matriz B (78 plazas).
 -- El array JSONB se inserta desde el frontend (clonarMatrizB) o vía
