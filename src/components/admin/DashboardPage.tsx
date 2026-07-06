@@ -33,17 +33,17 @@ export default function DashboardPage() {
 
   return (
     <section>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-betis-dark">Panel de administración</h1>
-          <p className="text-sm text-gray-500">Alta de partidos y gestión de plazas.</p>
+          <h1 className="text-2xl font-bold text-slate-800">Panel de administración</h1>
+          <p className="text-sm text-slate-500 mt-1">Alta de partidos y gestión de plazas.</p>
         </div>
         <button
           onClick={async () => {
             await signOut();
             nav("/");
           }}
-          className="text-sm text-gray-500 hover:text-red-500"
+          className="text-sm text-slate-500 hover:text-red-500 transition-colors px-3 py-1.5 rounded-lg hover:bg-red-50"
         >
           Cerrar sesión
         </button>
@@ -54,7 +54,7 @@ export default function DashboardPage() {
       </div>
 
       {loading ? (
-        <p className="text-gray-500">Cargando…</p>
+        <p className="text-slate-400">Cargando…</p>
       ) : (
         <PartidosTable partidos={partidos} onDelete={handleDelete} />
       )}

@@ -22,19 +22,19 @@ export default function PartidosListPage() {
     })();
   }, []);
 
-  if (loading) return <p className="text-center text-gray-500 py-10">Cargando partidos…</p>;
+  if (loading) return <p className="text-center text-slate-400 py-10">Cargando partidos…</p>;
   if (err) return <p className="text-center text-red-500 py-10">{err}</p>;
 
   return (
     <section>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-betis-dark">Partidos · Temporada 26/27</h1>
-        <p className="text-sm text-gray-500">
+        <h1 className="text-2xl font-bold text-slate-800">Partidos · Temporada 26/27</h1>
+        <p className="text-sm text-slate-500 mt-1">
           Selecciona un partido para ver la asignación de plazas del autobús.
         </p>
       </div>
       {partidos.length === 0 ? (
-        <div className="text-center py-16 text-gray-400">
+        <div className="text-center py-16 text-slate-400">
           <p className="mb-2">No hay partidos dados de alta todavía.</p>
           <p className="text-sm">
             Entra en <span className="font-medium">Admin</span> para crear el primero.

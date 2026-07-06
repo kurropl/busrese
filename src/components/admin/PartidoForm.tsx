@@ -41,47 +41,47 @@ export default function PartidoForm({ onCreate }: Props) {
     <div>
       <button
         onClick={() => setOpen((o) => !o)}
-        className="bg-betis-green text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-betis-dark"
+        className="btn-primary"
       >
         {open ? "Cancelar" : "+ Nuevo partido"}
       </button>
 
       {open && (
-        <form onSubmit={submit} className="mt-4 grid gap-3 sm:grid-cols-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
+        <form onSubmit={submit} className="mt-4 card grid gap-3 sm:grid-cols-2">
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Fecha</label>
+            <label className="block text-xs font-medium text-slate-600 mb-1.5">Fecha</label>
             <input
               type="date"
               value={fecha}
               onChange={(e) => setFecha(e.target.value)}
               required
-              className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm"
+              className="w-full rounded-xl border border-slate-200 bg-white/60 px-3 py-2 text-sm focus:border-betis-green focus:ring-2 focus:ring-emerald-100 outline-none transition-all"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Rival</label>
+            <label className="block text-xs font-medium text-slate-600 mb-1.5">Rival</label>
             <input
               value={rival}
               onChange={(e) => setRival(e.target.value)}
               required
               placeholder="Sevilla FC"
-              className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm"
+              className="w-full rounded-xl border border-slate-200 bg-white/60 px-3 py-2 text-sm focus:border-betis-green focus:ring-2 focus:ring-emerald-100 outline-none transition-all"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Competición</label>
+            <label className="block text-xs font-medium text-slate-600 mb-1.5">Competición</label>
             <input
               value={competicion}
               onChange={(e) => setCompeticion(e.target.value)}
-              className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm"
+              className="w-full rounded-xl border border-slate-200 bg-white/60 px-3 py-2 text-sm focus:border-betis-green focus:ring-2 focus:ring-emerald-100 outline-none transition-all"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Localidad</label>
+            <label className="block text-xs font-medium text-slate-600 mb-1.5">Localidad</label>
             <select
               value={localidad}
               onChange={(e) => setLocalidad(e.target.value as "Local" | "Visitante")}
-              className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm"
+              className="w-full rounded-xl border border-slate-200 bg-white/60 px-3 py-2 text-sm focus:border-betis-green focus:ring-2 focus:ring-emerald-100 outline-none transition-all"
             >
               <option>Local</option>
               <option>Visitante</option>
@@ -91,7 +91,7 @@ export default function PartidoForm({ onCreate }: Props) {
           <button
             type="submit"
             disabled={busy}
-            className="sm:col-span-2 bg-betis-dark text-white rounded py-2 text-sm font-medium hover:bg-betis-green disabled:opacity-50"
+            className="sm:col-span-2 bg-betis-dark text-white rounded-xl py-2.5 text-sm font-medium hover:bg-betis-green disabled:opacity-50 transition-all"
           >
             {busy ? "Creando (clonando Matriz B)…" : "Crear partido"}
           </button>

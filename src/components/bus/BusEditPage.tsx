@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
@@ -15,7 +15,7 @@ export default function BusEditPage() {
   const [selected, setSelected] = useState<Asiento | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const [savedMsg, setSavedMsg] = useState("");
 
   useEffect(() => {
     setBase(getConfigBase());
@@ -25,31 +25,32 @@ export default function BusEditPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  const applyChange = (next: Asiento) => {
-    if (!partido) return;
-    const asientos = partido.asientos.map((a) => (a.id === next.id ? next : a));
-    setPartido({ ...partido, asientos });
-    setSaved(false);
-  };
-
-  const guardar = async () => {
-    if (!partido || !id) return;
+  const guardarAsientos = useCallback(async (asientos: Asiento[]) => {
+    if (!id) return;
     setSaving(true);
     try {
-      await updatePartidoAsientos(id, partido.asientos);
-      setSaved(true);
+      await updatePartidoAsientos(id, asientos);
+      setSavedMsg("Guardado");
+      setTimeout(() => setSavedMsg(""), 2000);
     } catch (e) {
       alert(e instanceof Error ? e.message : "Error al guardar");
     } finally {
       setSaving(false);
     }
+  }, [id]);
+
+  const applyChange = (next: Asiento) => {
+    if (!partido) return;
+    const asientos = partido.asientos.map((a) => (a.id === next.id ? next : a));
+    setPartido({ ...partido, asientos });
+    guardarAsientos(asientos);
   };
 
-  if (loading) return <p className="text-center text-gray-500 py-10">Cargando…</p>;
+  if (loading) return <p className="text-center text-slate-400 py-10">Cargando…</p>;
   if (!partido)
     return (
       <div className="text-center py-10">
-        <p className="text-gray-500 mb-3">Partido no encontrado.</p>
+        <p className="text-slate-500 mb-3">Partido no encontrado.</p>
         <Link to="/admin" className="text-betis-green hover:underline">Volver al panel</Link>
       </div>
     );
@@ -59,26 +60,27 @@ export default function BusEditPage() {
 
   return (
     <section>
-      <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
+      <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
         <div>
           <Link to="/admin" className="text-sm text-betis-green hover:underline">← Panel</Link>
-          <h1 className="text-2xl font-bold text-betis-dark">
+          <h1 className="text-2xl font-bold text-slate-800 mt-1">
             Editar bus · {fecha} vs {partido.rival}
           </h1>
-          <p className="text-sm text-gray-500">Clic en un asiento para editarlo.</p>
+          <p className="text-sm text-slate-500">Clic en un asiento para editarlo. Los cambios se guardan automáticamente.</p>
         </div>
         <Legend />
       </div>
 
-      <div className="flex items-center gap-3 mb-4">
-        <button
-          onClick={guardar}
-          disabled={saving}
-          className="bg-betis-green text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-betis-dark disabled:opacity-50"
-        >
-          {saving ? "Guardando…" : "Guardar cambios"}
-        </button>
-        {saved && <span className="text-sm text-betis-green">Cambios guardados.</span>}
+      <div className="flex items-center gap-3 mb-4 h-6">
+        {saving && (
+          <span className="text-sm text-slate-400 flex items-center gap-1.5">
+            <span className="inline-block w-3 h-3 border-2 border-slate-200 border-t-betis-green rounded-full animate-spin" />
+            Guardando…
+          </span>
+        )}
+        {savedMsg && !saving && (
+          <span className="text-sm text-betis-green font-medium">{savedMsg}</span>
+        )}
       </div>
 
       <BusMap

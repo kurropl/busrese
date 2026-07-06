@@ -1,9 +1,11 @@
 import type { Asiento } from "../../types";
+import { TicketIcon, UserIcon } from "../ui/Icons";
 
 interface Props {
   asiento: Asiento;
   onClick?: (a: Asiento) => void;
   clickable?: boolean;
+  selected?: boolean;
 }
 
 const estadoCls: Record<Asiento["estado"], string> = {
@@ -13,30 +15,31 @@ const estadoCls: Record<Asiento["estado"], string> = {
   Guia: "seat-guia",
 };
 
-export default function Seat({ asiento, onClick, clickable }: Props) {
+export default function Seat({ asiento, onClick, clickable, selected }: Props) {
   const isFrontal = asiento.estado === "Conductor" || asiento.estado === "Guia";
-  const label = isFrontal
-    ? asiento.ocupante || asiento.estado
-    : String(asiento.numero);
 
-  const name =
-    asiento.estado === "Libre"
-      ? "Libre"
-      : asiento.ocupante && !isFrontal
-      ? asiento.ocupante
-      : null;
+  // No renderizar asientos frontales aquí (los pinta SeatFrontal)
+  if (isFrontal) return null;
+
+  const label = String(asiento.numero);
+  const isFree = asiento.estado === "Libre";
+  const name = isFree ? "Libre" : asiento.ocupante;
 
   return (
     <button
       type="button"
       disabled={!clickable}
       onClick={() => clickable && onClick?.(asiento)}
-      className={`seat ${estadoCls[asiento.estado]} ${clickable ? "seat-clickable" : ""}`}
-      title={asiento.ocupante ? `${label} · ${asiento.ocupante}` : label}
+      className={`seat ${estadoCls[asiento.estado]} ${clickable ? "seat-clickable" : ""} ${selected ? "seat-selected" : ""}`}
+      title={asiento.ocupante ? `Asiento ${asiento.numero} · ${asiento.ocupante}` : `Asiento ${asiento.numero}`}
     >
-      <span className="text-[9px] opacity-60">{label}</span>
-      {name && (
-        <span className="truncate max-w-full px-0.5 text-[8px] sm:text-[9px]">{name}</span>
+      <span className="seat-num">{label}</span>
+      {name && <span className="seat-name">{name}</span>}
+      {/* Icono de estado sutil */}
+      {isFree ? (
+        <UserIcon className="seat-icon" size={11} />
+      ) : (
+        <TicketIcon className="seat-icon" size={11} />
       )}
     </button>
   );

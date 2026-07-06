@@ -1,7 +1,8 @@
 import type { Asiento } from "../../types";
+import { SteeringIcon, MicIcon } from "../ui/Icons";
 
 interface Props {
-  asientos: Asiento[]; // 2 plazas: chófer (izq) y guía (der)
+  asientos: Asiento[];
   onSeatClick?: (a: Asiento) => void;
   clickable?: boolean;
 }
@@ -17,11 +18,11 @@ export default function SeatFrontal({ asientos, onSeatClick, clickable }: Props)
           type="button"
           disabled={!clickable}
           onClick={() => clickable && onSeatClick?.(chofer)}
-          className={`frontal-seat seat-conductor ${clickable ? "seat-clickable" : ""}`}
+          className={`frontal-card seat-conductor ${clickable ? "frontal-card-clickable" : ""}`}
           title="Conductor"
         >
-          <span className="text-base mb-0.5">🚌</span>
-          <span>CHÓFER</span>
+          <SteeringIcon className="frontal-icon" size={20} />
+          <span className="frontal-label">CHÓFER</span>
         </button>
       )}
       {guia && (
@@ -29,11 +30,11 @@ export default function SeatFrontal({ asientos, onSeatClick, clickable }: Props)
           type="button"
           disabled={!clickable}
           onClick={() => clickable && onSeatClick?.(guia)}
-          className={`frontal-seat seat-guia ${clickable ? "seat-clickable" : ""}`}
+          className={`frontal-card seat-guia ${clickable ? "frontal-card-clickable" : ""}`}
           title="Guía"
         >
-          <span className="text-base mb-0.5">📋</span>
-          <span>GUÍA</span>
+          <MicIcon className="frontal-icon" size={20} />
+          <span className="frontal-label">GUÍA</span>
         </button>
       )}
     </div>

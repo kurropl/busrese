@@ -1,8 +1,8 @@
 const items = [
-  { label: "Libre", cls: "bg-[#d1fae5] border border-[#6ee7b7]" },
-  { label: "Ocupado", cls: "bg-[#dbeafe] border border-[#93c5fd]" },
-  { label: "Conductor", cls: "bg-[#fef3c7] border border-[#fcd34d]" },
-  { label: "Guía", cls: "bg-[#ede9fe] border border-[#c4b5fd]" },
+  { label: "Libre",      cls: "bg-[#10b981] border-2 border-[#047857]" },
+  { label: "Ocupado",    cls: "bg-[#cbd5e1] border-2 border-[#94a3b8]" },
+  { label: "Conductor",  cls: "bg-[#fbbf24] border-2 border-[#d97706]" },
+  { label: "Guía",       cls: "bg-[#c4b5fd] border-2 border-[#8b5cf6]" },
 ];
 
 export default function Legend() {

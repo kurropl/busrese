@@ -21,12 +21,12 @@ export default function BusViewPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <p className="text-center text-gray-500 py-10">Cargando autobús…</p>;
+  if (loading) return <p className="text-center text-slate-400 py-10">Cargando autobús…</p>;
   if (err) return <p className="text-center text-red-500 py-10">{err}</p>;
   if (!partido)
     return (
       <div className="text-center py-10">
-        <p className="text-gray-500 mb-3">Partido no encontrado.</p>
+        <p className="text-slate-500 mb-3">Partido no encontrado.</p>
         <Link to="/" className="text-betis-green hover:underline">Volver al listado</Link>
       </div>
     );
@@ -35,13 +35,13 @@ export default function BusViewPage() {
 
   return (
     <section>
-      <div className="mb-4 flex items-center justify-between flex-wrap gap-2">
+      <div className="mb-5 flex items-center justify-between flex-wrap gap-3">
         <div>
           <Link to="/" className="text-sm text-betis-green hover:underline">← Partidos</Link>
-          <h1 className="text-2xl font-bold text-betis-dark capitalize">{fecha}</h1>
-          <p className="text-gray-600">
-            Betis vs <span className="font-medium">{partido.rival}</span> ·{" "}
-            <span className="text-betis-green">{partido.localidad}</span> · {partido.competicion}
+          <h1 className="text-2xl font-bold text-slate-800 capitalize mt-1">{fecha}</h1>
+          <p className="text-slate-500 text-sm">
+            Betis vs <span className="font-semibold text-slate-700">{partido.rival}</span> ·{" "}
+            <span className="text-betis-green font-medium">{partido.localidad}</span> · {partido.competicion}
           </p>
         </div>
         <Legend />

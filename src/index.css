@@ -7,120 +7,259 @@
 }
 
 body {
-  @apply bg-slate-100 text-slate-800 antialiased;
+  @apply bg-slate-50 text-slate-800 antialiased;
+  font-family: "Outfit", system-ui, sans-serif;
+  background-image:
+    radial-gradient(at 20% 0%, rgba(16, 185, 129, 0.04) 0px, transparent 50%),
+    radial-gradient(at 80% 100%, rgba(99, 102, 241, 0.04) 0px, transparent 50%);
+  background-attachment: fixed;
 }
 
-/* ========== AUTOBÚS ========== */
+/* ================================================================
+   AUTOBÚS — REDISEÑO GLASSMORPHISM BLANCO
+   ================================================================ */
 
-/* Carrocería del bus */
+/* Contenedor principal — capa flotante con sombra suave */
 .bus-shell {
-  @apply relative mx-auto max-w-md rounded-3xl p-5 shadow-xl;
-  background: linear-gradient(160deg, #1e3a5f 0%, #2c5282 50%, #1e3a5f 100%);
+  @apply relative mx-auto max-w-sm rounded-[2.5rem] p-6;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow:
+    0 24px 64px rgba(15, 23, 42, 0.12),
+    0 4px 16px rgba(15, 23, 42, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
-/* Línea de ventanas superior */
+/* Línea de ventanas superior — sutil */
 .bus-windows {
-  @apply absolute top-2 left-6 right-6 h-3 rounded-full opacity-30;
+  @apply absolute top-4 left-10 right-10 h-2 rounded-full;
   background: repeating-linear-gradient(
     90deg,
-    transparent 0,
-    transparent 8px,
-    rgba(255,255,255,0.4) 8px,
-    rgba(255,255,255,0.4) 16px
+    rgba(100, 116, 139, 0.12) 0,
+    rgba(100, 116, 139, 0.12) 5px,
+    rgba(100, 116, 139, 0.25) 5px,
+    rgba(100, 116, 139, 0.25) 12px
   );
 }
 
-/* Interior del bus */
-.bus-interior {
-  @apply relative rounded-2xl bg-slate-50 p-4 mt-5;
+/* Marca/logo superior */
+.bus-brand {
+  @apply absolute top-8 left-1/2 -translate-x-1/2 text-slate-400 text-[7px] font-semibold tracking-[0.25em] uppercase;
 }
 
-/* Grid de asientos: 2 izq | pasillo | 2 der */
+/* Interior del bus — superficie blanca con profundidad */
+.bus-interior {
+  @apply relative rounded-2xl bg-white/80 p-4 mt-9;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow:
+    inset 0 2px 12px rgba(15, 23, 42, 0.06),
+    0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Etiquetas orientación */
+.bus-label {
+  @apply text-center text-[8px] font-semibold uppercase tracking-[0.2em] text-slate-400;
+}
+
+/* Parabrisas y fondo del bus */
+.bus-parabrisas {
+  @apply mx-auto h-1 w-3/4 rounded-full mb-3;
+  background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.3), transparent);
+}
+.bus-fondo {
+  @apply mx-auto h-1 w-3/4 rounded-full mt-3;
+  background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.3), transparent);
+}
+
+/* ================================================================
+   GRID DE ASIENTOS — 2 izq | pasillo | 2 der
+   ================================================================ */
 .bus-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 0.5fr 1fr 1fr;
-  gap: 0.5rem 0.4rem;
+  grid-template-columns: 1fr 1fr 0.4fr 1fr 1fr;
+  gap: 0.35rem;
   align-items: stretch;
 }
 
-/* Asiento individual */
+/* ================================================================
+   ASIENTO — forma real (respaldo + base)
+   ================================================================ */
 .seat {
-  @apply flex flex-col items-center justify-center rounded-lg text-center font-medium leading-tight transition-all duration-200 select-none;
-  aspect-ratio: 1 / 1;
-  min-height: 2.5rem;
-  border: 1.5px solid transparent;
+  @apply relative flex flex-col items-center justify-center transition-all duration-200 select-none cursor-default;
+  aspect-ratio: 0.82 / 1;
+  min-height: 2.8rem;
+  border-radius: 10px 10px 7px 7px;
+  border: 2px solid transparent;
+  overflow: hidden;
 }
 
-/* Estados — estilo suave con borde coloreado */
-.seat-libre {
-  background: #d1fae5;
-  border-color: #6ee7b7;
-  color: #047857;
+/* "Respaldo" — tercio superior redondeado */
+.seat::before {
+  content: "";
+  @apply absolute top-0 left-0 right-0;
+  height: 32%;
+  border-radius: 8px 8px 0 0;
 }
-.seat-libre:hover { background: #a7f3d0; }
 
+/* "Base" — parte inferior */
+.seat::after {
+  content: "";
+  @apply absolute bottom-0 left-0 right-0;
+  height: 68%;
+  border-radius: 0 0 5px 5px;
+}
+
+/* --- Estados de color --- */
+
+/* Ocupado: azul grisáceo suave, texto oscuro (alta legibilidad) */
 .seat-ocupado {
-  background: #dbeafe;
-  border-color: #93c5fd;
-  color: #1e40af;
+  background: #cbd5e1;
+  border-color: #94a3b8;
+  color: #1e293b;
 }
+.seat-ocupado::before { background: #94a3b8; }
+.seat-ocupado::after  { background: #cbd5e1; }
 
+/* Libre: verde esmeralda vibrante, borde oscuro, texto blanco */
+.seat-libre {
+  background: #10b981;
+  border-color: #047857;
+  color: #ffffff;
+}
+.seat-libre::before { background: #059669; }
+.seat-libre::after  { background: #10b981; }
+
+/* Conductor: amarillo dorado */
 .seat-conductor {
-  background: #fef3c7;
-  border-color: #fcd34d;
-  color: #92400e;
+  background: #fbbf24;
+  border-color: #d97706;
+  color: #78350f;
 }
+.seat-conductor::before { background: #f59e0b; }
+.seat-conductor::after  { background: #fbbf24; }
 
+/* Guía: morado suave */
 .seat-guia {
-  background: #ede9fe;
-  border-color: #c4b5fd;
-  color: #6d28d9;
+  background: #c4b5fd;
+  border-color: #8b5cf6;
+  color: #4c1d95;
+}
+.seat-guia::before { background: #a78bfa; }
+.seat-guia::after  { background: #c4b5fd; }
+
+/* Seleccionado: borde dorado brillante */
+.seat-selected {
+  border-color: #fbbf24 !important;
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.45);
 }
 
-.seat-clickable {
-  @apply cursor-pointer;
-}
+/* Hover para asientos clicables */
+.seat-clickable { @apply cursor-pointer; }
 .seat-clickable:hover {
-  transform: scale(1.08);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.18);
+  z-index: 10;
 }
 
-/* Pasillo central */
+/* Texto dentro del asiento */
+.seat-num {
+  @apply text-[13px] font-bold leading-none relative z-10;
+}
+.seat-name {
+  @apply text-[7px] leading-tight text-center px-0.5 truncate max-w-full relative z-10 mt-0.5;
+  opacity: 0.8;
+}
+.seat-icon {
+  @apply relative z-10 mt-0.5 opacity-60;
+}
+
+/* ================================================================
+   PASILLO CENTRAL — texturizado gris
+   ================================================================ */
 .pasillo {
   @apply flex items-center justify-center;
   background: repeating-linear-gradient(
     180deg,
-    #cbd5e1 0,
-    #cbd5e1 4px,
-    transparent 4px,
-    transparent 10px
+    #f1f5f9 0,
+    #f1f5f9 4px,
+    #e2e8f0 4px,
+    #e2e8f0 8px
   );
   border-radius: 4px;
-  min-height: 2.5rem;
+  min-height: 2.8rem;
 }
 
-/* Frontal: chófer y guía */
+/* ================================================================
+   FRONTAL — Chófer y Guía (cards integradas)
+   ================================================================ */
 .bus-frontal {
-  @apply grid grid-cols-2 gap-3 mb-3 pb-3 border-b-2 border-dashed border-slate-300;
+  @apply grid grid-cols-2 gap-3 mb-3 pb-3;
+  border-bottom: 2px dashed #e2e8f0;
 }
 
-.frontal-seat {
-  @apply flex flex-col items-center justify-center rounded-lg py-2 text-xs font-semibold;
-  min-height: 2.5rem;
+.frontal-card {
+  @apply flex flex-col items-center justify-center rounded-2xl py-3 px-2 transition-all duration-200;
+  border: 2px solid;
+  backdrop-filter: blur(4px);
 }
 
-/* Numeral de fila */
-.row-num {
-  @apply text-[9px] text-slate-400 self-center text-right pr-0.5 font-mono;
-  grid-column: 1 / -1;
-  text-align: center;
-  margin-bottom: -2px;
+.frontal-card-clickable { @apply cursor-pointer; }
+.frontal-card-clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15);
 }
 
-/* Parabrisas y fondo */
-.bus-parabrisas {
-  @apply mx-auto h-1.5 w-3/4 rounded-full bg-slate-300/40 mb-2;
+.frontal-icon { @apply mb-1; }
+.frontal-label { @apply text-[9px] font-bold uppercase tracking-[0.15em]; }
+
+/* ================================================================
+   LAYOUT GENERAL
+   ================================================================ */
+.main-container {
+  @apply max-w-6xl mx-auto px-4 py-6;
 }
-.bus-fondo {
-  @apply mx-auto h-1.5 w-3/4 rounded-full bg-slate-300/40 mt-2;
+
+.card {
+  @apply bg-white/80 rounded-2xl border border-slate-200/60 p-5;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
 }
+
+/* Botones */
+.btn-primary {
+  @apply bg-emerald-600 text-white rounded-xl px-4 py-2 text-sm font-medium transition-all;
+}
+.btn-primary:hover {
+  @apply bg-emerald-700;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+.btn-primary:disabled { @apply opacity-50; }
+
+.btn-secondary {
+  @apply rounded-xl border border-slate-300 px-3 py-2 text-sm transition-all;
+}
+.btn-secondary:hover {
+  @apply bg-slate-50 border-slate-400;
+}
+.btn-secondary:disabled { @apply opacity-40; }
+
+/* ================================================================
+   NAVEGACIÓN INFERIOR — minimalista
+   ================================================================ */
+.bottom-nav {
+  @apply sticky bottom-0 flex items-center justify-center gap-8 py-3 px-6 mt-4;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+.bottom-nav-btn {
+  @apply flex flex-col items-center gap-0.5 text-slate-400 transition-colors;
+}
+.bottom-nav-btn:hover { @apply text-slate-700; }
+.bottom-nav-btn span { @apply text-[9px] font-medium; }

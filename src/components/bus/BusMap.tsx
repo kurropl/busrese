@@ -15,10 +15,15 @@ export default function BusMap({ asientos, onSeatClick, clickable }: Props) {
 
   return (
     <div className="bus-shell">
-      {/* Línea de ventanas */}
+      {/* Ventanas superiores */}
       <div className="bus-windows" />
+      {/* Marca */}
+      <div className="bus-brand">Peña Bética · El Arco</div>
 
       <div className="bus-interior">
+        {/* Etiqueta Delante */}
+        <div className="bus-label mb-2">▲ Delante</div>
+
         {/* Parabrisas */}
         <div className="bus-parabrisas" />
 
@@ -45,6 +50,9 @@ export default function BusMap({ asientos, onSeatClick, clickable }: Props) {
 
         {/* Fondo del bus */}
         <div className="bus-fondo" />
+
+        {/* Etiqueta Detrás */}
+        <div className="bus-label mt-2">▼ Detrás</div>
       </div>
     </div>
   );
