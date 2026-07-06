@@ -50,7 +50,8 @@ export default function BusEditPage() {
 
   function copiarLinkWhatsApp() {
     if (!id) return;
-    const url = `${window.location.origin}/confirmar/${id}`;
+    const base = import.meta.env.BASE_URL; // "/busrese/" en GitHub Pages, "/" en dev
+    const url = `${window.location.origin}${base}confirmar/${id}`;
     const mensaje = `*Peña Bética El Arco* — Autobús 26/27
 
 Confirma tu plaza para *Betis vs ${partido?.rival}* (${format(parseISO(partido!.fecha), "d MMM yyyy", { locale: es })}).
