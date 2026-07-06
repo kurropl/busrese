@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getPartidos } from "../../lib/db";
+import { getPartidos, seedIfEmpty } from "../../lib/db";
 import type { Partido } from "../../types";
 import PartidoCard from "./PartidoCard";
 
@@ -9,10 +9,17 @@ export default function PartidosListPage() {
   const [err, setErr] = useState("");
 
   useEffect(() => {
-    getPartidos()
-      .then(setPartidos)
-      .catch((e) => setErr(e.message))
-      .finally(() => setLoading(false));
+    (async () => {
+      try {
+        await seedIfEmpty();
+        const list = await getPartidos();
+        setPartidos(list);
+      } catch (e) {
+        setErr(e instanceof Error ? e.message : String(e));
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
   if (loading) return <p className="text-center text-gray-500 py-10">Cargando partidos…</p>;

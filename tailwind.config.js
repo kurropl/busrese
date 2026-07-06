@@ -10,11 +10,15 @@ export default {
           light: "#1bbf73",
         },
         seat: {
-          libre: "#22c55e",
-          ocupado: "#ef4444",
-          conductor: "#3b82f6",
-          guia: "#a855f7",
-          desasignado: "#f59e0b",
+          // Paleta suave y moderna
+          libre: "#10b981",      // esmeralda
+          libreBg: "#d1fae5",     // esmeralda claro (fondo)
+          ocupado: "#0ea5e9",    // cielo azul
+          ocupadoBg: "#e0f2fe",   // cielo claro
+          conductor: "#f59e0b",  // ámbar dorado
+          conductorBg: "#fef3c7",
+          guia: "#8b5cf6",       // violeta
+          guiaBg: "#ede9fe",
         },
       },
       fontFamily: {

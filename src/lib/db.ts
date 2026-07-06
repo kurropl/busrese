@@ -1,8 +1,10 @@
 import { supabase, supabaseEnabled } from "./supabase";
 import { clonarMatrizB } from "../data/matrizB";
+import calendario from "../data/calendario.json";
 import type { Asiento, Partido, PartidoInput } from "../types";
 
 const LS_KEY = "pena-betica-partidos";
+const LS_SEEDED = "pena-betica-seeded";
 
 /* ----------------------------- Local fallback ----------------------------- */
 
@@ -21,6 +23,40 @@ function uid() {
 }
 
 /* ------------------------------- Public API ------------------------------- */
+
+/** Carga los 38 partidos del calendario 26/27 si la BD está vacía. */
+export async function seedIfEmpty(): Promise<void> {
+  const existing = await getPartidos();
+  if (existing.length > 0) return;
+
+  if (supabaseEnabled && supabase) {
+    const inserts = calendario.map((p) => ({
+      fecha: p.fecha,
+      rival: p.rival,
+      competicion: "LaLiga EA Sports",
+      localidad: p.localidad,
+      asientos: clonarMatrizB(),
+      activo: true,
+    }));
+    const { error } = await supabase.from("partidos").insert(inserts);
+    if (error) throw error;
+    return;
+  }
+
+  // Local: insertar 38 partidos
+  const list: Partido[] = calendario.map((p) => ({
+    id: uid(),
+    fecha: p.fecha,
+    rival: p.rival,
+    competicion: "LaLiga EA Sports",
+    localidad: p.localidad as "Local" | "Visitante",
+    asientos: clonarMatrizB(),
+    activo: true,
+    created_at: new Date().toISOString(),
+  }));
+  lsWrite(list);
+  localStorage.setItem(LS_SEEDED, "1");
+}
 
 export async function getPartidos(): Promise<Partido[]> {
   if (supabaseEnabled && supabase) {

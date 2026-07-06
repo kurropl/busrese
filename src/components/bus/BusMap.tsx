@@ -14,38 +14,38 @@ export default function BusMap({ asientos, onSeatClick, clickable }: Props) {
   const filas = Array.from(new Set(cuerpo.map((a) => a.fila))).sort((a, b) => a - b);
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-      {/* Parabrisas */}
-      <div className="mx-auto mb-3 h-2 w-3/4 rounded-full bg-gray-200" />
+    <div className="bus-shell">
+      {/* Línea de ventanas */}
+      <div className="bus-windows" />
 
-      <SeatFrontal asientos={frontal} onSeatClick={onSeatClick} clickable={clickable} />
+      <div className="bus-interior">
+        {/* Parabrisas */}
+        <div className="bus-parabrisas" />
 
-      <div className="border-t border-dashed border-gray-200 my-2" />
+        {/* Frontal: chófer y guía */}
+        <SeatFrontal asientos={frontal} onSeatClick={onSeatClick} clickable={clickable} />
 
-      {/* Cuerpo: grid de 6 columnas (num | lw | la | pasillo | ra | rw) */}
-      <div
-        className="grid gap-1.5"
-        style={{ gridTemplateColumns: "1.2rem 1fr 1fr 0.7fr 1fr 1fr" }}
-      >
-        {filas.map((f) => {
-          const rowSeats = cuerpo
-            .filter((a) => a.fila === f)
-            .sort((a, b) => (a.numero ?? 0) - (b.numero ?? 0));
-          return (
-            <SeatRow
-              key={f}
-              fila={f}
-              asientos={rowSeats}
-              onSeatClick={onSeatClick}
-              clickable={clickable}
-            />
-          );
-        })}
+        {/* Cuerpo: 15 filas x 4 asientos con pasillo central */}
+        <div className="bus-grid">
+          {filas.map((f) => {
+            const rowSeats = cuerpo
+              .filter((a) => a.fila === f)
+              .sort((a, b) => (a.numero ?? 0) - (b.numero ?? 0));
+            return (
+              <SeatRow
+                key={f}
+                fila={f}
+                asientos={rowSeats}
+                onSeatClick={onSeatClick}
+                clickable={clickable}
+              />
+            );
+          })}
+        </div>
+
+        {/* Fondo del bus */}
+        <div className="bus-fondo" />
       </div>
-
-      <div className="border-t border-dashed border-gray-200 my-2" />
-      {/* Fondo */}
-      <div className="mx-auto h-2 w-3/4 rounded-full bg-gray-200" />
     </div>
   );
 }

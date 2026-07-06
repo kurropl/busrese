@@ -7,29 +7,120 @@
 }
 
 body {
-  @apply bg-gray-50 text-gray-900 antialiased;
+  @apply bg-slate-100 text-slate-800 antialiased;
 }
 
-/* ---------- Autobús: CSS Grid ---------- */
+/* ========== AUTOBÚS ========== */
+
+/* Carrocería del bus */
+.bus-shell {
+  @apply relative mx-auto max-w-md rounded-3xl p-5 shadow-xl;
+  background: linear-gradient(160deg, #1e3a5f 0%, #2c5282 50%, #1e3a5f 100%);
+}
+
+/* Línea de ventanas superior */
+.bus-windows {
+  @apply absolute top-2 left-6 right-6 h-3 rounded-full opacity-30;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 8px,
+    rgba(255,255,255,0.4) 8px,
+    rgba(255,255,255,0.4) 16px
+  );
+}
+
+/* Interior del bus */
+.bus-interior {
+  @apply relative rounded-2xl bg-slate-50 p-4 mt-5;
+}
+
+/* Grid de asientos: 2 izq | pasillo | 2 der */
 .bus-grid {
   display: grid;
-  grid-template-columns: 1fr 0.5fr 1fr; /* izq | pasillo | der */
-  gap: 0.4rem 0.5rem;
+  grid-template-columns: 1fr 1fr 0.5fr 1fr 1fr;
+  gap: 0.5rem 0.4rem;
+  align-items: stretch;
 }
 
+/* Asiento individual */
 .seat {
-  @apply flex flex-col items-center justify-center rounded-md text-center text-[10px] sm:text-xs font-medium leading-tight transition-colors select-none;
+  @apply flex flex-col items-center justify-center rounded-lg text-center font-medium leading-tight transition-all duration-200 select-none;
   aspect-ratio: 1 / 1;
-  min-height: 2.6rem;
+  min-height: 2.5rem;
+  border: 1.5px solid transparent;
 }
 
-.seat-libre      { @apply bg-seat-libre/90 text-white; }
-.seat-ocupado    { @apply bg-seat-ocupado/90 text-white; }
-.seat-conductor  { @apply bg-seat-conductor/90 text-white; }
-.seat-guia       { @apply bg-seat-guia/90 text-white; }
+/* Estados — estilo suave con borde coloreado */
+.seat-libre {
+  background: #d1fae5;
+  border-color: #6ee7b7;
+  color: #047857;
+}
+.seat-libre:hover { background: #a7f3d0; }
 
-.seat-clickable { @apply cursor-pointer hover:ring-2 hover:ring-betis-light hover:ring-offset-1; }
+.seat-ocupado {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1e40af;
+}
 
+.seat-conductor {
+  background: #fef3c7;
+  border-color: #fcd34d;
+  color: #92400e;
+}
+
+.seat-guia {
+  background: #ede9fe;
+  border-color: #c4b5fd;
+  color: #6d28d9;
+}
+
+.seat-clickable {
+  @apply cursor-pointer;
+}
+.seat-clickable:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Pasillo central */
 .pasillo {
-  @apply flex items-center justify-center text-gray-300 text-[10px];
+  @apply flex items-center justify-center;
+  background: repeating-linear-gradient(
+    180deg,
+    #cbd5e1 0,
+    #cbd5e1 4px,
+    transparent 4px,
+    transparent 10px
+  );
+  border-radius: 4px;
+  min-height: 2.5rem;
+}
+
+/* Frontal: chófer y guía */
+.bus-frontal {
+  @apply grid grid-cols-2 gap-3 mb-3 pb-3 border-b-2 border-dashed border-slate-300;
+}
+
+.frontal-seat {
+  @apply flex flex-col items-center justify-center rounded-lg py-2 text-xs font-semibold;
+  min-height: 2.5rem;
+}
+
+/* Numeral de fila */
+.row-num {
+  @apply text-[9px] text-slate-400 self-center text-right pr-0.5 font-mono;
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-bottom: -2px;
+}
+
+/* Parabrisas y fondo */
+.bus-parabrisas {
+  @apply mx-auto h-1.5 w-3/4 rounded-full bg-slate-300/40 mb-2;
+}
+.bus-fondo {
+  @apply mx-auto h-1.5 w-3/4 rounded-full bg-slate-300/40 mt-2;
 }

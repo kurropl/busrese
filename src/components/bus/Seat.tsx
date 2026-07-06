@@ -14,18 +14,17 @@ const estadoCls: Record<Asiento["estado"], string> = {
 };
 
 export default function Seat({ asiento, onClick, clickable }: Props) {
-  const label =
-    asiento.estado === "Conductor" || asiento.estado === "Guia"
-      ? asiento.ocupante || asiento.estado
-      : asiento.numero != null
-      ? String(asiento.numero)
-      : asiento.id;
+  const isFrontal = asiento.estado === "Conductor" || asiento.estado === "Guia";
+  const label = isFrontal
+    ? asiento.ocupante || asiento.estado
+    : String(asiento.numero);
 
-  const name = asiento.ocupante && asiento.estado !== "Conductor" && asiento.estado !== "Guia"
-    ? asiento.ocupante
-    : asiento.estado === "Libre"
-    ? "Libre"
-    : asiento.ocupante;
+  const name =
+    asiento.estado === "Libre"
+      ? "Libre"
+      : asiento.ocupante && !isFrontal
+      ? asiento.ocupante
+      : null;
 
   return (
     <button
@@ -35,9 +34,9 @@ export default function Seat({ asiento, onClick, clickable }: Props) {
       className={`seat ${estadoCls[asiento.estado]} ${clickable ? "seat-clickable" : ""}`}
       title={asiento.ocupante ? `${label} · ${asiento.ocupante}` : label}
     >
-      <span className="opacity-80">{label}</span>
-      {name && name !== label && (
-        <span className="truncate max-w-full px-0.5">{name}</span>
+      <span className="text-[9px] opacity-60">{label}</span>
+      {name && (
+        <span className="truncate max-w-full px-0.5 text-[8px] sm:text-[9px]">{name}</span>
       )}
     </button>
   );

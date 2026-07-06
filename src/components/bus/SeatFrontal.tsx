@@ -1,31 +1,41 @@
 import type { Asiento } from "../../types";
-import Seat from "./Seat";
 
 interface Props {
-  asientos: Asiento[]; // 6 plazas frontales
+  asientos: Asiento[]; // 2 plazas: chófer (izq) y guía (der)
   onSeatClick?: (a: Asiento) => void;
   clickable?: boolean;
 }
 
 export default function SeatFrontal({ asientos, onSeatClick, clickable }: Props) {
-  const izq = asientos.filter((a) => a.lado === "Izquierda");
-  const der = asientos.filter((a) => a.lado === "Derecha");
+  const chofer = asientos.find((a) => a.estado === "Conductor");
+  const guia = asientos.find((a) => a.estado === "Guia");
+
   return (
-    <div className="mb-2">
-      <div className="text-center text-[10px] text-gray-400 mb-1">Frontal</div>
-      <div className="bus-grid">
-        <div className="col-span-1 flex flex-col gap-1">
-          {izq.map((a) => (
-            <Seat key={a.id} asiento={a} onClick={onSeatClick} clickable={clickable} />
-          ))}
-        </div>
-        <div className="pasillo">·</div>
-        <div className="col-span-1 flex flex-col gap-1">
-          {der.map((a) => (
-            <Seat key={a.id} asiento={a} onClick={onSeatClick} clickable={clickable} />
-          ))}
-        </div>
-      </div>
+    <div className="bus-frontal">
+      {chofer && (
+        <button
+          type="button"
+          disabled={!clickable}
+          onClick={() => clickable && onSeatClick?.(chofer)}
+          className={`frontal-seat seat-conductor ${clickable ? "seat-clickable" : ""}`}
+          title="Conductor"
+        >
+          <span className="text-base mb-0.5">🚌</span>
+          <span>CHÓFER</span>
+        </button>
+      )}
+      {guia && (
+        <button
+          type="button"
+          disabled={!clickable}
+          onClick={() => clickable && onSeatClick?.(guia)}
+          className={`frontal-seat seat-guia ${clickable ? "seat-clickable" : ""}`}
+          title="Guía"
+        >
+          <span className="text-base mb-0.5">📋</span>
+          <span>GUÍA</span>
+        </button>
+      )}
     </div>
   );
 }

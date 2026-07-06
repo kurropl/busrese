@@ -12,10 +12,10 @@ export default function SeatRow({ fila, asientos, onSeatClick, clickable }: Prop
   const [vIzq, pIzq, pDer, vDer] = asientos;
   return (
     <>
-      <div className="text-[10px] text-gray-400 self-center text-right pr-1">{fila}</div>
+      {/* Número de fila a la izquierda */}
       <Seat asiento={vIzq} onClick={onSeatClick} clickable={clickable} />
       <Seat asiento={pIzq} onClick={onSeatClick} clickable={clickable} />
-      <div className="pasillo">·</div>
+      <div className="pasillo" />
       <Seat asiento={pDer} onClick={onSeatClick} clickable={clickable} />
       <Seat asiento={vDer} onClick={onSeatClick} clickable={clickable} />
     </>
