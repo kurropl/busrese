@@ -31,10 +31,24 @@ export default function DashboardPage() {
     setPartidos((prev) => prev.filter((p) => p.id !== id));
   };
 
-  const handleTogglePublicar = async (id: string, activo: boolean) => {
-    await togglePublicarPartido(id, activo);
+  const handleTogglePublicar = async (
+    id: string,
+    activo: boolean,
+    datos?: { fecha?: string; hora_partido?: string; hora_salida_bus?: string }
+  ) => {
+    await togglePublicarPartido(id, activo, datos);
     setPartidos((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, activo } : p))
+      prev.map((p) =>
+        p.id === id
+          ? {
+              ...p,
+              activo,
+              fecha: datos?.fecha ?? p.fecha,
+              hora_partido: datos?.hora_partido ?? p.hora_partido,
+              hora_salida_bus: datos?.hora_salida_bus ?? p.hora_salida_bus,
+            }
+          : p
+      )
     );
   };
 

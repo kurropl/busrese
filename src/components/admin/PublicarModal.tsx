@@ -7,12 +7,38 @@ interface Props {
   onConfirm: (datos: { fecha: string; hora_partido: string; hora_salida_bus: string }) => Promise<void>;
 }
 
+/** Resta N horas a una hora "HH:MM" y devuelve "HH:MM" (sin pasar de 00:00). */
+function restarHoras(hora: string, horas: number): string {
+  const [h, m] = hora.split(":").map(Number);
+  let total = h * 60 + m - horas * 60;
+  if (total < 0) total = 0;
+  const nh = Math.floor(total / 60);
+  const nm = total % 60;
+  return `${String(nh).padStart(2, "0")}:${String(nm).padStart(2, "0")}`;
+}
+
 export default function PublicarModal({ partido, onClose, onConfirm }: Props) {
   const [fecha, setFecha] = useState(partido.fecha);
   const [horaPartido, setHoraPartido] = useState(partido.hora_partido || "");
   const [horaSalida, setHoraSalida] = useState(partido.hora_salida_bus || "");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
+
+  // Cuando cambia la hora del partido, recalcular salida del bus (2h antes)
+  // solo si el usuario no ha tocado manualmente la hora de salida.
+  const [salidaManual, setSalidaManual] = useState(!!partido.hora_salida_bus);
+
+  const onHoraPartidoChange = (val: string) => {
+    setHoraPartido(val);
+    if (!salidaManual && val) {
+      setHoraSalida(restarHoras(val, 2));
+    }
+  };
+
+  const onHoraSalidaChange = (val: string) => {
+    setHoraSalida(val);
+    setSalidaManual(true);
+  };
 
   const submit = async () => {
     if (!fecha) {
@@ -84,7 +110,7 @@ export default function PublicarModal({ partido, onClose, onConfirm }: Props) {
             <input
               type="time"
               value={horaPartido}
-              onChange={(e) => setHoraPartido(e.target.value)}
+              onChange={(e) => onHoraPartidoChange(e.target.value)}
               required
               placeholder="18:30"
               className="w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2.5 text-sm focus:border-betis-green focus:ring-2 focus:ring-emerald-100 outline-none transition-all"
@@ -94,17 +120,20 @@ export default function PublicarModal({ partido, onClose, onConfirm }: Props) {
           <div>
             <label className="block text-xs font-medium text-slate-600 mb-1.5">
               Hora de salida del bus
+              <span className="ml-2 text-emerald-500 font-normal">
+                {horaPartido && !salidaManual && `Auto: 2h antes`}
+              </span>
             </label>
             <input
               type="time"
               value={horaSalida}
-              onChange={(e) => setHoraSalida(e.target.value)}
+              onChange={(e) => onHoraSalidaChange(e.target.value)}
               required
               placeholder="16:00"
               className="w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2.5 text-sm focus:border-betis-green focus:ring-2 focus:ring-emerald-100 outline-none transition-all"
             />
             <p className="text-xs text-slate-400 mt-1">
-              Hora de salida desde el punto de encuentro de la peña.
+              Se precarga automáticamente 2 horas antes del partido. Puedes ajustarla manualmente.
             </p>
           </div>
         </div>
