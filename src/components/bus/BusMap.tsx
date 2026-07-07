@@ -6,9 +6,11 @@ interface Props {
   asientos: Asiento[];
   onSeatClick?: (a: Asiento) => void;
   clickable?: boolean;
+  horaPartido?: string | null;
+  horaSalidaBus?: string | null;
 }
 
-export default function BusMap({ asientos, onSeatClick, clickable }: Props) {
+export default function BusMap({ asientos, onSeatClick, clickable, horaPartido, horaSalidaBus }: Props) {
   const frontal = asientos.filter((a) => a.zona === "Frontal");
   const cuerpo = asientos.filter((a) => a.zona === "Cuerpo");
   const filas = Array.from(new Set(cuerpo.map((a) => a.fila))).sort((a, b) => a - b);
@@ -17,8 +19,21 @@ export default function BusMap({ asientos, onSeatClick, clickable }: Props) {
     <div className="bus-shell">
       {/* Ventanas superiores */}
       <div className="bus-windows" />
-      {/* Marca */}
-      <div className="bus-brand">Peña Bética · El Arco</div>
+
+      {/* Marca + horas */}
+      <div className="bus-brand flex items-center justify-between px-4">
+        <span>Peña Bética · El Arco</span>
+        {(horaPartido || horaSalidaBus) && (
+          <span className="flex gap-3 text-[11px] font-semibold">
+            {horaSalidaBus && (
+              <span className="text-emerald-300">Salida {horaSalidaBus}</span>
+            )}
+            {horaPartido && (
+              <span className="text-amber-200">Partido {horaPartido}</span>
+            )}
+          </span>
+        )}
+      </div>
 
       <div className="bus-interior">
         {/* Etiqueta Delante */}

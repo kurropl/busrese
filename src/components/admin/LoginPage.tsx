@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { supabaseEnabled } from "../../lib/supabase";
-import { BetisCrestIcon } from "../ui/Icons";
 
 export default function LoginPage() {
   const { signIn, session } = useAuth();
@@ -11,6 +10,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
+  const basePath = import.meta.env.BASE_URL;
 
   if (session) return <Navigate to="/admin" replace />;
 
@@ -31,9 +31,11 @@ export default function LoginPage() {
   return (
     <div className="max-w-sm mx-auto mt-12">
       <div className="text-center mb-8">
-        <span className="inline-block mb-3">
-          <BetisCrestIcon size={40} />
-        </span>
+        <img
+          src={`${basePath}betis-escudo.png`}
+          alt="Escudo Real Betis"
+          className="h-14 w-auto mx-auto mb-3"
+        />
         <h1 className="text-2xl font-bold text-slate-800">Acceso administrador</h1>
         <p className="text-sm text-slate-500 mt-1">Panel de gestión de plazas del autobús.</p>
       </div>

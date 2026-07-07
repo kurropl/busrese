@@ -64,7 +64,11 @@ export default function BusViewPage() {
         </div>
         <Legend />
       </div>
-      <BusMap asientos={partido.asientos} />
+      <BusMap
+        asientos={partido.asientos}
+        horaPartido={partido.hora_partido}
+        horaSalidaBus={partido.hora_salida_bus}
+      />
     </section>
   );
 }

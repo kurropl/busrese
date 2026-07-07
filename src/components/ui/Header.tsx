@@ -1,20 +1,22 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { BetisCrestIcon } from "./Icons";
 
 export default function Header() {
   const { session } = useAuth();
   const loc = useLocation();
   const isAdmin = loc.pathname.startsWith("/admin");
+  const basePath = import.meta.env.BASE_URL;
 
   return (
     <header className="sticky top-0 z-40">
       <div className="bg-white/80 backdrop-blur-xl border-b border-slate-200/60">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5">
-            <span>
-              <BetisCrestIcon size={28} />
-            </span>
+            <img
+              src={`${basePath}betis-escudo.png`}
+              alt="Escudo Real Betis"
+              className="h-9 w-auto"
+            />
             <div className="leading-none">
               <span className="block text-base font-bold tracking-tight text-slate-800">
                 Peña Bética El Arco

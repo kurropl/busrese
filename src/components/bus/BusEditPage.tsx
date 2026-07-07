@@ -94,6 +94,24 @@ Gracias!`;
             Editar bus · {fecha} vs {partido.rival}
           </h1>
           <p className="text-sm text-slate-500">Clic en un asiento para editarlo. Los cambios se guardan automáticamente.</p>
+
+          {/* Horas destacadas */}
+          {(partido.hora_partido || partido.hora_salida_bus) && (
+            <div className="mt-2 flex flex-wrap gap-3">
+              {partido.hora_salida_bus && (
+                <div className="bg-emerald-50/80 border border-emerald-100 rounded-xl px-4 py-2">
+                  <p className="text-[10px] uppercase tracking-wide text-emerald-600 font-semibold">Salida del bus</p>
+                  <p className="text-lg font-bold text-emerald-700">{partido.hora_salida_bus}</p>
+                </div>
+              )}
+              {partido.hora_partido && (
+                <div className="bg-slate-50/80 border border-slate-100 rounded-xl px-4 py-2">
+                  <p className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">Hora del partido</p>
+                  <p className="text-lg font-bold text-slate-700">{partido.hora_partido}</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <Legend />
       </div>
@@ -139,6 +157,8 @@ Gracias!`;
         asientos={partido.asientos}
         clickable
         onSeatClick={(a) => setSelected(a)}
+        horaPartido={partido.hora_partido}
+        horaSalidaBus={partido.hora_salida_bus}
       />
 
       {selected && (

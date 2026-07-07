@@ -115,6 +115,8 @@ export default function ConfirmarPage() {
         onSeatClick={(a) => {
           if (a.estado === "Ocupado") setSelected(a);
         }}
+        horaPartido={partido.hora_partido}
+        horaSalidaBus={partido.hora_salida_bus}
       />
 
       {/* Leyenda de confirmación */}
