@@ -36,7 +36,7 @@ export async function seedIfEmpty(): Promise<void> {
       competicion: "LaLiga EA Sports",
       localidad: p.localidad,
       asientos: clonarMatrizB(),
-      activo: true,
+      activo: false,
     }));
     const { error } = await supabase.from("partidos").insert(inserts);
     if (error) throw error;
@@ -51,7 +51,7 @@ export async function seedIfEmpty(): Promise<void> {
     competicion: "LaLiga EA Sports",
     localidad: p.localidad as "Local" | "Visitante",
     asientos: clonarMatrizB(),
-    activo: true,
+    activo: false,
     created_at: new Date().toISOString(),
   }));
   lsWrite(list);
@@ -84,7 +84,7 @@ export async function createPartido(input: PartidoInput): Promise<Partido> {
   if (supabaseEnabled && supabase) {
     const { data, error } = await supabase
       .from("partidos")
-      .insert({ ...input, asientos, activo: true })
+      .insert({ ...input, asientos, activo: false })
       .select()
       .single();
     if (error) throw error;
@@ -94,7 +94,7 @@ export async function createPartido(input: PartidoInput): Promise<Partido> {
     id: uid(),
     ...input,
     asientos,
-    activo: true,
+    activo: false,
     created_at: new Date().toISOString(),
   };
   const list = lsRead();
@@ -128,6 +128,25 @@ export async function deletePartido(id: string): Promise<void> {
     return;
   }
   lsWrite(lsRead().filter((p) => p.id !== id));
+}
+
+/** Publica / despublica un partido (toggle del campo `activo`). */
+export async function togglePublicarPartido(id: string, activo: boolean): Promise<void> {
+  if (supabaseEnabled && supabase) {
+    const { error } = await supabase
+      .from("partidos")
+      .update({ activo, updated_at: new Date().toISOString() })
+      .eq("id", id);
+    if (error) throw error;
+    return;
+  }
+  const list = lsRead();
+  const idx = list.findIndex((p) => p.id === id);
+  if (idx >= 0) {
+    list[idx].activo = activo;
+    list[idx].updated_at = new Date().toISOString();
+    lsWrite(list);
+  }
 }
 
 /** Devuelve la configuración base (Matriz B) para la acción "Restaurar". */

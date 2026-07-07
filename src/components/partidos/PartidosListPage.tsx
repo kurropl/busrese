@@ -13,7 +13,7 @@ export default function PartidosListPage() {
       try {
         await seedIfEmpty();
         const list = await getPartidos();
-        setPartidos(list);
+        setPartidos(list.filter((p) => p.activo));
       } catch (e) {
         setErr(e instanceof Error ? e.message : String(e));
       } finally {

@@ -6,9 +6,10 @@ import type { Partido } from "../../types";
 interface Props {
   partidos: Partido[];
   onDelete: (id: string) => Promise<void>;
+  onTogglePublicar: (id: string, activo: boolean) => Promise<void>;
 }
 
-export default function PartidosTable({ partidos, onDelete }: Props) {
+export default function PartidosTable({ partidos, onDelete, onTogglePublicar }: Props) {
   if (partidos.length === 0)
     return <p className="text-slate-400 text-sm py-4">Sin partidos. Crea el primero arriba.</p>;
 
@@ -19,8 +20,8 @@ export default function PartidosTable({ partidos, onDelete }: Props) {
           <tr>
             <th className="px-4 py-3 font-medium">Fecha</th>
             <th className="px-4 py-3 font-medium">Rival</th>
-            <th className="px-4 py-3 font-medium">Comp.</th>
             <th className="px-4 py-3 font-medium">Localidad</th>
+            <th className="px-4 py-3 font-medium">Estado</th>
             <th className="px-4 py-3 font-medium text-right">Acciones</th>
           </tr>
         </thead>
@@ -31,7 +32,6 @@ export default function PartidosTable({ partidos, onDelete }: Props) {
                 {format(parseISO(p.fecha), "d MMM yyyy", { locale: es })}
               </td>
               <td className="px-4 py-3 font-medium text-slate-800">{p.rival}</td>
-              <td className="px-4 py-3 text-slate-500">{p.competicion}</td>
               <td className="px-4 py-3">
                 <span className={`text-xs font-medium px-2 py-1 rounded-full ${
                   p.localidad === "Local"
@@ -41,6 +41,19 @@ export default function PartidosTable({ partidos, onDelete }: Props) {
                   {p.localidad}
                 </span>
               </td>
+              <td className="px-4 py-3">
+                {p.activo ? (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    Publicado
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full">
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                    Borrador
+                  </span>
+                )}
+              </td>
               <td className="px-4 py-3 text-right space-x-3 whitespace-nowrap">
                 <Link
                   to={`/admin/partido/${p.id}`}
@@ -48,6 +61,16 @@ export default function PartidosTable({ partidos, onDelete }: Props) {
                 >
                   Editar bus
                 </Link>
+                <button
+                  onClick={() => onTogglePublicar(p.id, !p.activo)}
+                  className={
+                    p.activo
+                      ? "text-amber-600 hover:underline font-medium"
+                      : "text-emerald-600 hover:underline font-medium"
+                  }
+                >
+                  {p.activo ? "Despublicar" : "Publicar"}
+                </button>
                 <button
                   onClick={() => {
                     if (confirm(`¿Eliminar el partido vs ${p.rival}?`)) onDelete(p.id);

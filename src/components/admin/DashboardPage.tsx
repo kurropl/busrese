@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { getPartidos, createPartido, deletePartido } from "../../lib/db";
+import { getPartidos, createPartido, deletePartido, togglePublicarPartido } from "../../lib/db";
 import type { Partido, PartidoInput } from "../../types";
 import PartidoForm from "./PartidoForm";
 import PartidosTable from "./PartidosTable";
@@ -31,12 +31,23 @@ export default function DashboardPage() {
     setPartidos((prev) => prev.filter((p) => p.id !== id));
   };
 
+  const handleTogglePublicar = async (id: string, activo: boolean) => {
+    await togglePublicarPartido(id, activo);
+    setPartidos((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, activo } : p))
+    );
+  };
+
+  const publicados = partidos.filter((p) => p.activo).length;
+
   return (
     <section>
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">Panel de administración</h1>
-          <p className="text-sm text-slate-500 mt-1">Alta de partidos y gestión de plazas.</p>
+          <p className="text-sm text-slate-500 mt-1">
+            {partidos.length} partidos · {publicados} publicados · {partidos.length - publicados} borradores
+          </p>
         </div>
         <button
           onClick={async () => {
@@ -56,7 +67,11 @@ export default function DashboardPage() {
       {loading ? (
         <p className="text-slate-400">Cargando…</p>
       ) : (
-        <PartidosTable partidos={partidos} onDelete={handleDelete} />
+        <PartidosTable
+          partidos={partidos}
+          onDelete={handleDelete}
+          onTogglePublicar={handleTogglePublicar}
+        />
       )}
     </section>
   );
