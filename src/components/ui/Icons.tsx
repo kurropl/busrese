@@ -79,12 +79,24 @@ export function MenuIcon({ className = "", size = 20 }: IconProps) {
   );
 }
 
-export function PhoenixIcon({ className = "", size = 28 }: IconProps) {
+export function BetisCrestIcon({ className = "", size = 28 }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" stroke="currentColor"
-      strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M16 4c-3 2-5 5-5 9 0 2 1 4 2 5-2 1-4 3-4 6 0 1 .5 2 1 3 1-2 3-3 5-3s4 1 5 3c.5-1 1-2 1-3 0-3-2-5-4-6 1-1 2-3 2-5 0-4-2-7-5-9z" />
-      <path d="M16 4c-1 3-2 5-2 8 0 2 1 4 2 5 1-1 2-3 2-5 0-3-1-5-2-8z" fill="currentColor" fillOpacity="0.15" />
+    <svg width={size} height={size * 1.25} viewBox="0 0 32 40" fill="none" className={className}>
+      {/* Corona real */}
+      <path d="M8 3 L10 6.5 L13 2.5 L16 6 L19 2.5 L22 6.5 L24 3 L24 8 L8 8 Z" fill="#C9A86A" />
+      <circle cx="8" cy="3" r="1.3" fill="#C9A86A" />
+      <circle cx="16" cy="2" r="1.3" fill="#C9A86A" />
+      <circle cx="24" cy="3" r="1.3" fill="#C9A86A" />
+      {/* Borde del escudo */}
+      <path d="M5 9 L27 9 L27 23 C27 31 21 37 16 39 C11 37 5 31 5 23 Z" fill="white" stroke="#00954C" strokeWidth="1.8" />
+      {/* Franjas verticales verdes (13 franjas alternadas) */}
+      <path d="M7 9 L9.2 9 L9.2 36.5 L7.5 35 Z" fill="#00954C" />
+      <path d="M11.6 9 L13.8 9 L13.8 38 L11.6 37 Z" fill="#00954C" />
+      <path d="M16.2 9 L18.4 9 L18.4 38 L16.2 37 Z" fill="#00954C" />
+      <path d="M20.8 9 L23 9 L23 36.5 L20.8 35 Z" fill="#00954C" />
+      {/* Escudo interior con "B" */}
+      <circle cx="16" cy="20" r="5.5" fill="white" stroke="#00954C" strokeWidth="1.2" />
+      <text x="16" y="24" textAnchor="middle" fontSize="8" fontWeight="700" fill="#00954C" fontFamily="serif">B</text>
     </svg>
   );
 }

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { supabaseEnabled } from "../../lib/supabase";
-import { PhoenixIcon } from "../ui/Icons";
+import { BetisCrestIcon } from "../ui/Icons";
 
 export default function LoginPage() {
   const { signIn, session } = useAuth();
@@ -31,8 +31,8 @@ export default function LoginPage() {
   return (
     <div className="max-w-sm mx-auto mt-12">
       <div className="text-center mb-8">
-        <span className="inline-block text-betis-green mb-3">
-          <PhoenixIcon size={40} />
+        <span className="inline-block mb-3">
+          <BetisCrestIcon size={40} />
         </span>
         <h1 className="text-2xl font-bold text-slate-800">Acceso administrador</h1>
         <p className="text-sm text-slate-500 mt-1">Panel de gestión de plazas del autobús.</p>

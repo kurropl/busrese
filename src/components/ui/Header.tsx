@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { PhoenixIcon } from "./Icons";
+import { BetisCrestIcon } from "./Icons";
 
 export default function Header() {
   const { session } = useAuth();
@@ -12,8 +12,8 @@ export default function Header() {
       <div className="bg-white/80 backdrop-blur-xl border-b border-slate-200/60">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5">
-            <span className="text-betis-green">
-              <PhoenixIcon size={28} />
+            <span>
+              <BetisCrestIcon size={28} />
             </span>
             <div className="leading-none">
               <span className="block text-base font-bold tracking-tight text-slate-800">
