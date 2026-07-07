@@ -20,19 +20,9 @@ export default function BusMap({ asientos, onSeatClick, clickable, horaPartido, 
       {/* Ventanas superiores */}
       <div className="bus-windows" />
 
-      {/* Marca + horas */}
-      <div className="bus-brand flex items-center justify-between px-4">
+      {/* Marca */}
+      <div className="bus-brand">
         <span>Peña Bética · El Arco</span>
-        {(horaPartido || horaSalidaBus) && (
-          <span className="flex gap-3 text-[11px] font-semibold">
-            {horaSalidaBus && (
-              <span className="text-emerald-300">Salida {horaSalidaBus}</span>
-            )}
-            {horaPartido && (
-              <span className="text-amber-200">Partido {horaPartido}</span>
-            )}
-          </span>
-        )}
       </div>
 
       <div className="bus-interior">

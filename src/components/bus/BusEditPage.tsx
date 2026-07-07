@@ -116,7 +116,7 @@ Gracias!`;
         <Legend />
       </div>
 
-      {/* Barra de confirmaciones por WhatsApp */}
+      {/* Barra de confirmaciones por WhatsApp + Restablecer */}
       <div className="card mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex gap-4 text-sm">
           <span className="flex items-center gap-1.5">
@@ -132,13 +132,27 @@ Gracias!`;
             {cancelados} cancelados
           </span>
         </div>
-        <button
-          onClick={copiarLinkWhatsApp}
-          className="bg-[#25D366] text-white rounded-xl px-4 py-2 text-sm font-medium flex items-center gap-2 hover:bg-[#1eb555] transition-all"
-        >
-          <WhatsAppIcon size={18} />
-          {copied ? "Copiado! Pégalo en el grupo" : "Copiar mensaje para el grupo"}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => {
+              if (confirm("¿Restablecer todos los asientos a la configuración original? Se perderán los cambios de este partido.")) {
+                const asientosOrig = getConfigBase();
+                setPartido({ ...partido, asientos: asientosOrig });
+                guardarAsientos(asientosOrig);
+              }
+            }}
+            className="text-slate-500 hover:text-amber-600 border border-slate-200 hover:border-amber-300 rounded-xl px-4 py-2 text-sm font-medium transition-all"
+          >
+            Restablecer bus
+          </button>
+          <button
+            onClick={copiarLinkWhatsApp}
+            className="bg-[#25D366] text-white rounded-xl px-4 py-2 text-sm font-medium flex items-center gap-2 hover:bg-[#1eb555] transition-all"
+          >
+            <WhatsAppIcon size={18} />
+            {copied ? "Copiado! Pégalo en el grupo" : "Copiar mensaje para el grupo"}
+          </button>
+        </div>
       </div>
 
       <div className="flex items-center gap-3 mb-4 h-6">
