@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Asiento } from "../../types";
+import type { Asiento, Confirmacion } from "../../types";
 
 interface Props {
   asiento: Asiento;
@@ -7,6 +7,18 @@ interface Props {
   onClose: () => void;
   onApply: (next: Asiento) => void;
 }
+
+const confirmacionLabel: Record<Confirmacion, string> = {
+  pendiente: "Pendiente",
+  confirmado: "Confirmado",
+  cancelado: "Cancelado",
+};
+
+const confirmacionColor: Record<Confirmacion, string> = {
+  pendiente: "text-slate-500 bg-slate-100",
+  confirmado: "text-emerald-600 bg-emerald-50",
+  cancelado: "text-red-500 bg-red-50",
+};
 
 export default function SeatEditModal({ asiento, baseAsiento, onClose, onApply }: Props) {
   const [nuevoNombre, setNuevoNombre] = useState(asiento.ocupante || "");
@@ -18,7 +30,7 @@ export default function SeatEditModal({ asiento, baseAsiento, onClose, onApply }
     : `Asiento ${asiento.numero}`;
 
   const desasignar = () => {
-    onApply({ ...asiento, estado: "Libre", ocupante: null });
+    onApply({ ...asiento, estado: "Libre", ocupante: null, confirmado: undefined });
     onClose();
   };
 
@@ -33,12 +45,24 @@ export default function SeatEditModal({ asiento, baseAsiento, onClose, onApply }
   };
 
   const restaurar = () => {
-    onApply({ ...asiento, estado: baseAsiento.estado, ocupante: baseAsiento.ocupante });
+    onApply({
+      ...asiento,
+      estado: baseAsiento.estado,
+      ocupante: baseAsiento.ocupante,
+      confirmado: undefined,
+    });
+    onClose();
+  };
+
+  const desconfirmar = () => {
+    onApply({ ...asiento, confirmado: undefined });
     onClose();
   };
 
   const cambiado =
     asiento.estado !== baseAsiento.estado || asiento.ocupante !== baseAsiento.ocupante;
+
+  const tieneConfirmacion = asiento.confirmado === "confirmado" || asiento.confirmado === "cancelado";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-md">
@@ -58,14 +82,24 @@ export default function SeatEditModal({ asiento, baseAsiento, onClose, onApply }
           </button>
         </div>
 
-        <div className="mb-5 text-sm bg-slate-50/80 rounded-2xl p-3.5 border border-slate-100">
-          <div className="flex justify-between mb-1.5">
+        <div className="mb-5 text-sm bg-slate-50/80 rounded-2xl p-3.5 border border-slate-100 space-y-1.5">
+          <div className="flex justify-between">
             <span className="text-slate-500">Estado actual</span>
             <span className="font-semibold text-slate-800">{asiento.estado}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-slate-500">Ocupante</span>
             <span className="font-semibold text-slate-800">{asiento.ocupante || "—"}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-slate-500">Confirmación</span>
+            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+              asiento.confirmado
+                ? confirmacionColor[asiento.confirmado]
+                : "text-slate-400 bg-slate-100"
+            }`}>
+              {asiento.confirmado ? confirmacionLabel[asiento.confirmado] : "Sin confirmar"}
+            </span>
           </div>
           {cambiado && (
             <p className="mt-2.5 text-xs text-amber-600 border-t border-amber-100 pt-2">
@@ -96,6 +130,16 @@ export default function SeatEditModal({ asiento, baseAsiento, onClose, onApply }
             </button>
           </div>
         </div>
+
+        {/* Desconfirmar */}
+        {tieneConfirmacion && (
+          <button
+            onClick={desconfirmar}
+            className="w-full mb-3 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl py-2 text-sm font-medium hover:bg-amber-100 transition-all"
+          >
+            Desconfirmar (resetear a pendiente)
+          </button>
+        )}
 
         <div className="flex gap-2 pt-3 border-t border-slate-100">
           <button
