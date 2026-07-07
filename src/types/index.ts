@@ -15,14 +15,16 @@ export interface Asiento {
 
 export interface Partido {
   id: string;
-  fecha: string; // ISO date
+  fecha: string; // ISO date (orientativa hasta publicar)
   rival: string;
   competicion: string;
   localidad: "Local" | "Visitante";
   asientos: Asiento[];
   activo: boolean;
+  hora_partido?: string | null; // "HH:MM" — se establece al publicar
+  hora_salida_bus?: string | null; // "HH:MM" — se establece al publicar
   created_at?: string;
   updated_at?: string;
 }
 
-export type PartidoInput = Omit<Partido, "id" | "asientos" | "activo" | "created_at" | "updated_at">;
+export type PartidoInput = Omit<Partido, "id" | "asientos" | "activo" | "created_at" | "updated_at" | "hora_partido" | "hora_salida_bus">;

@@ -130,13 +130,21 @@ export async function deletePartido(id: string): Promise<void> {
   lsWrite(lsRead().filter((p) => p.id !== id));
 }
 
-/** Publica / despublica un partido (toggle del campo `activo`). */
-export async function togglePublicarPartido(id: string, activo: boolean): Promise<void> {
+/** Publica / despublica un partido. Al publicar, se fijan fecha, hora y hora de salida. */
+export async function togglePublicarPartido(
+  id: string,
+  activo: boolean,
+  datos?: { fecha?: string; hora_partido?: string; hora_salida_bus?: string }
+): Promise<void> {
   if (supabaseEnabled && supabase) {
-    const { error } = await supabase
-      .from("partidos")
-      .update({ activo, updated_at: new Date().toISOString() })
-      .eq("id", id);
+    const patch: Record<string, unknown> = {
+      activo,
+      updated_at: new Date().toISOString(),
+    };
+    if (datos?.fecha) patch.fecha = datos.fecha;
+    if (datos?.hora_partido !== undefined) patch.hora_partido = datos.hora_partido || null;
+    if (datos?.hora_salida_bus !== undefined) patch.hora_salida_bus = datos.hora_salida_bus || null;
+    const { error } = await supabase.from("partidos").update(patch).eq("id", id);
     if (error) throw error;
     return;
   }
@@ -144,6 +152,9 @@ export async function togglePublicarPartido(id: string, activo: boolean): Promis
   const idx = list.findIndex((p) => p.id === id);
   if (idx >= 0) {
     list[idx].activo = activo;
+    if (datos?.fecha) list[idx].fecha = datos.fecha;
+    if (datos?.hora_partido !== undefined) list[idx].hora_partido = datos.hora_partido || null;
+    if (datos?.hora_salida_bus !== undefined) list[idx].hora_salida_bus = datos.hora_salida_bus || null;
     list[idx].updated_at = new Date().toISOString();
     lsWrite(list);
   }

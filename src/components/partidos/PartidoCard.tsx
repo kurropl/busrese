@@ -29,6 +29,25 @@ export default function PartidoCard({ partido }: { partido: Partido }) {
         Betis <span className="text-slate-300 mx-1">vs</span>{" "}
         <span className="font-semibold text-slate-700">{partido.rival}</span>
       </p>
+
+      {/* Horas destacadas */}
+      {(partido.hora_partido || partido.hora_salida_bus) && (
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          {partido.hora_salida_bus && (
+            <div className="bg-emerald-50/80 border border-emerald-100 rounded-xl px-3 py-2">
+              <p className="text-[10px] uppercase tracking-wide text-emerald-600 font-semibold">Salida bus</p>
+              <p className="text-base font-bold text-emerald-700">{partido.hora_salida_bus}</p>
+            </div>
+          )}
+          {partido.hora_partido && (
+            <div className="bg-slate-50/80 border border-slate-100 rounded-xl px-3 py-2">
+              <p className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">Hora partido</p>
+              <p className="text-base font-bold text-slate-700">{partido.hora_partido}</p>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="mt-3.5 flex gap-4 text-xs text-slate-500 border-t border-slate-100 pt-3">
         <span className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-slate-400" />
